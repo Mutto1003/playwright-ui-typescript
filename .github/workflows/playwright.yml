@@ -27,6 +27,8 @@ jobs:
       - name: Run Playwright test via Docker Compose
         run: |
           docker-compose up -d --build
+          echo "Listing generated report:"
+          ls -la playwright-report || echo "No report directory"
 
       # 📤 อัปโหลดรายงานผลการทดสอบ (ต้องแน่ใจว่า mount จาก container ออกมาแล้ว)
       - name: Upload Playwright Report
