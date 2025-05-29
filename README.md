@@ -48,4 +48,8 @@
 ## Commard run env
 - ENV=dev npx playwright test
 
+## Adding the Dockerfile
+- https://github.com/microsoft/playwright-docker
+- https://github.com/microsoft/playwright-docker/blob/main/Dockerfile
+
 ## tsconfig.json
