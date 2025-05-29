@@ -26,7 +26,7 @@ jobs:
       # 🐳 รัน docker-compose สำหรับรัน MySQL และ Playwright test
       - name: Run Playwright test via Docker Compose
         run: |
-          docker-compose up -d --build --abort-on-container-exit
+          docker-compose up -d --build
 
       # 📤 อัปโหลดรายงานผลการทดสอบ (ต้องแน่ใจว่า mount จาก container ออกมาแล้ว)
       - name: Upload Playwright Report
