@@ -7,7 +7,8 @@ services:
       - ENV=dev
     volumes:
       - ./:/app
-    command: npx playwright test
+      - ./playwright-report:/app/playwright-report   # ✅ แชร์รายงานออกมานอก container
+    command: npx playwright test --reporter=html     # ✅ สั่งให้สร้าง HTML report
 
   mysql:
     image: mysql:8.0
