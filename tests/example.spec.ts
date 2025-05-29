@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
-import { queryDB, initializeDB } from '../utils/dbHelper';
+// import { queryDB, initializeDB } from '../utils/dbHelper';
 
 test.beforeAll(async () => {
   // Initialize database before running tests
-  await initializeDB();
+  // await initializeDB();
 });
 
 test('has title', async ({ page }) => {
