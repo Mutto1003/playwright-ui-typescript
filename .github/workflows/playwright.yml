@@ -30,6 +30,12 @@ jobs:
           echo "Listing generated report:"
           ls -la playwright-report || echo "No report directory"
 
+      - name: Copy Playwright report out of container
+        run: |
+          CONTAINER_ID=$(docker ps -aqf "name=playwright_playwright_1")
+          docker cp $CONTAINER_ID:/app/playwright-report ./playwright-report
+          ls -la ./playwright-report
+
       # 📤 อัปโหลดรายงานผลการทดสอบ (ต้องแน่ใจว่า mount จาก container ออกมาแล้ว)
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
