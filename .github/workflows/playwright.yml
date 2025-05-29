@@ -44,3 +44,11 @@ jobs:
           name: playwright-report    # ตั้งชื่อ artifact เป็น "playwright-report"
           path: playwright-report/   # ระบุโฟลเดอร์รายงานที่จะอัปโหลด
           retention-days: 30         # เก็บ artifact นี้ไว้ 30 วันบน GitHub
+
+      # ✅ Step เพิ่มเติม: Deploy รายงานไป GitHub Pages
+      - name: Deploy report to GitHub Pages
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./playwright-report
