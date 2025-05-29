@@ -52,4 +52,7 @@
 - https://github.com/microsoft/playwright-docker
 - https://github.com/microsoft/playwright-docker/blob/main/Dockerfile
 
+## install mysql2
+- npm install mysql2
+
 ## tsconfig.json
