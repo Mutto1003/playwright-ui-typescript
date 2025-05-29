@@ -1,51 +1,37 @@
-# 🎯 ชื่อ workflow ที่จะแสดงบนหน้า GitHub Actions ของ repo
-name: Playwright Tests
+# 🎯 ชื่อ workflow
+name: Playwright Tests with Docker Compose
 
-# 🚀 Trigger: ทำงานเมื่อมี push หรือ pull request ไปยัง main หรือ master
 on:
   push:
-    branches: [main, master]         # ทำงานเมื่อมี push ไปที่ main หรือ master
+    branches: [main, master]
   pull_request:
-    branches: [main, master]         # ทำงานเมื่อมี PR ไปยัง main หรือ master
+    branches: [main, master]
 
 jobs:
   test:
-    # 🕒 กำหนด timeout สูงสุดของ job นี้
-    timeout-minutes: 60              # ถ้าเกิน 60 นาทีจะถูกยกเลิก
-    runs-on: ubuntu-latest           # ใช้ runner ที่เป็น Ubuntu เวอร์ชันล่าสุด
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
 
     steps:
-      # ✅ Step 1: Checkout โค้ดจาก repo
-      - uses: actions/checkout@v4    # ดึง source code ของโปรเจกต์มาใช้งาน
+      # ✅ Checkout code
+      - uses: actions/checkout@v4
 
-      # 🔧 Step 2: ติดตั้ง Node.js LTS version
-      - uses: actions/setup-node@v4
+      # 🐳 รัน docker-compose สำหรับรัน MySQL และ Playwright test
+      - name: Run Playwright test via Docker Compose
+        run: |
+          docker-compose up --build --abort-on-container-exit
+          docker-compose down
+
+      # 📤 อัปโหลดรายงานผลการทดสอบ (ต้องแน่ใจว่า mount จาก container ออกมาแล้ว)
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
         with:
-          node-version: lts/*        # ใช้ Node.js เวอร์ชัน LTS ล่าสุด
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
 
-      # 📦 Step 3: ติดตั้ง dependencies ด้วย npm
-      - name: Install dependencies
-        run: npm ci                  # ติดตั้งจาก package-lock.json (เร็วและเสถียร)
-
-      # 🌐 Step 4: ติดตั้ง browser engines สำหรับ Playwright
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-        # ติดตั้ง Chromium, Firefox, WebKit พร้อม dependencies ที่จำเป็น
-
-      # 🧪 Step 5: รัน Playwright tests
-      - name: Run Playwright tests
-        run: npx playwright test
-        # รัน automated UI tests ที่กำหนดไว้ในโปรเจกต์
-
-      # 📤 Step 6: อัปโหลดรายงานผลการทดสอบ
-      - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}      # รันเฉพาะเมื่อ workflow ไม่ถูกยกเลิก
-        with:
-          name: playwright-report    # ตั้งชื่อ artifact เป็น "playwright-report"
-          path: playwright-report/   # ระบุโฟลเดอร์รายงานที่จะอัปโหลด
-          retention-days: 30         # เก็บ artifact นี้ไว้ 30 วันบน GitHub
-
-      # ✅ Step เพิ่มเติม: Deploy รายงานไป GitHub Pages
+      # ✅ Deploy รายงานไป GitHub Pages
       - name: Deploy report to GitHub Pages
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: peaceiris/actions-gh-pages@v3
