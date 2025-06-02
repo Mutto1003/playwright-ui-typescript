@@ -26,7 +26,7 @@ jobs:
       # 🐳 รัน docker-compose สำหรับรัน MySQL และ Playwright test
       - name: Run Playwright test via Docker Compose
         run: |
-          docker-compose up -d --build
+          docker-compose up --build
 
       - name: Listing generated report
         run: |
