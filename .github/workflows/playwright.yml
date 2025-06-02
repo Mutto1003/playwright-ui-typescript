@@ -31,7 +31,7 @@ jobs:
       - name: Listing generated report
         run: |
           ls -la playwright-report || echo "No report directory"
-          ls -la playwright-report/report.html || echo "No report file"
+          ls -la ./playwright-report || echo "No report file"
 
       # 📤 อัปโหลดรายงานผลการทดสอบ (ต้องแน่ใจว่า mount จาก container ออกมาแล้ว)
       - name: Upload Playwright Report
