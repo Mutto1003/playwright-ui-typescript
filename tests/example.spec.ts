@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test';
+// import { initializeDB } from '../db/initialize';
+// import { queryDB } from '../db/query';
 import { LoginPage } from '../pages/LoginPage';
-import { queryDB, initializeDB } from '../utils/dbHelper';
 
 test.beforeAll(async () => {
   // Initialize database before running tests
-  await initializeDB();
+  // await initializeDB();
 });
 
 test('has title', async ({ page }) => {
@@ -14,6 +15,6 @@ test('has title', async ({ page }) => {
   await loginPage.login('Admin', 'admin123');
   await page.waitForTimeout(5000);
 
-  const result: any = await queryDB('SELECT * FROM users WHERE username = ?', ['Admin']);
-  console.log('📦 User info from DB:', result);
+  // const result: any = await queryDB('SELECT * FROM users WHERE username = ?', ['Admin']);
+  // console.log('📦 User info from DB:', result);
 });
