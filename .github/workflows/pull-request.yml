@@ -1,0 +1,41 @@
+name: Pull Request Checks  # ชื่อ workflow นี้
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]  # รันเมื่อ PR ถูกเปิดใหม่ หรือเปลี่ยนสถานะเป็น ready_for_review
+    branches:
+      - main  # รันเฉพาะ PR ที่ส่งไปยัง branch main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}  # จัดกลุ่มงานตามชื่อ workflow + เลข PR หรือ ref
+  cancel-in-progress: true  # ถ้ามีงานเก่าที่ยังรันอยู่กับ PR เดียวกัน ให้ยกเลิกงานเก่า
+
+jobs:
+  check-pr-name:
+    runs-on: ubuntu-latest  # ใช้ runner เป็น Ubuntu เวอร์ชันล่าสุด
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3  # ดึงโค้ดจาก repo มาที่ runner
+
+      - name: Get PR details
+        id: pr-details
+        run: |
+          echo "PR title: ${{ github.event.pull_request.title }}"   # แสดงชื่อ PR ใน log
+          echo "Source branch: ${{ github.event.pull_request.head.ref }}"  # แสดงชื่อ branch ที่ส่ง PR มา
+
+      - name: Check PR title and source branch
+        id: check-title
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"   # เก็บชื่อ PR ในตัวแปร PR_TITLE
+          SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"  # เก็บชื่อ branch ที่ส่ง PR มาใน SOURCE_BRANCH
+
+          # ตรวจสอบว่า PR_TITLE ตรงกับ pattern ที่กำหนดหรือไม่
+          if [[ "$PR_TITLE" =~ ^sprint-[0-9]+/(feature|fix)/[a-z0-9_-]+$ ]]; then
+            echo "PR title matches sprint feature/fix pattern."  # ถ้าตรง pattern sprint-{X}/feature/{name} หรือ sprint-{X}/fix/{name} ให้ผ่าน
+          elif [[ "$PR_TITLE" =~ ^hotfix/[a-z0-9_-]+$ ]]; then
+            echo "PR title matches hotfix pattern."  # หรือถ้าตรง pattern hotfix/{name} ให้ผ่าน
+          else
+            echo "Invalid PR title: $PR_TITLE"  # ถ้าไม่ตรง pattern ใดๆ ให้แสดงข้อความผิดพลาด
+            echo "::error::Pull request title does not match the required pattern: sprint-{X}/feature/{XXXXX}, sprint-{X}/fix/{XXXXX}, hotfix"  # แจ้ง error ใน GitHub Actions UI
+            exit 1  # หยุดทำงาน job นี้ พร้อมส่งสถานะล้มเหลว (fail)
+          fi
