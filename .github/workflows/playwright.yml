@@ -1,4 +1,3 @@
-# 🎯 ชื่อ workflow
 name: Playwright Tests with Docker Compose
 
 on:
@@ -13,35 +12,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ✅ Checkout code
       - uses: actions/checkout@v4
 
-      # ✅ ติดตั้ง Docker Compose
       - name: Install Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.29.2/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
 
-      # 🐳 รัน docker-compose สำหรับรัน MySQL และ Playwright test
-      - name: Run Playwright test via Docker Compose
-        run: |
-          docker-compose up -d --build
+      - name: Run Playwright tests container in background
+        run: docker-compose up -d --build playwright
 
-      - name: Wait for Playwright container to finish (poll container status)
+      - name: Wait for Playwright container to finish
         run: |
-          while [ "$(docker inspect -f '{{.State.Running}}' $(docker-compose ps -q playwright))" == "true" ]; do
-            echo "Waiting for test container to finish..."
+          CONTAINER_ID=$(docker ps -a -q -f name=playwright)
+          echo "Waiting for container $CONTAINER_ID to stop..."
+          while [ "$(docker inspect -f '{{.State.Running}}' $CONTAINER_ID)" == "true" ]; do
+            echo "Still running..."
             sleep 5
           done
+          echo "Container stopped."
 
-      - name: Copy report from container to host
-        run: docker cp $(docker-compose ps -q playwright):/app/playwright-report ./playwright-report
+      - name: Copy Playwright report from container
+        run: |
+          CONTAINER_ID=$(docker ps -a -q -f name=playwright)
+          docker cp $CONTAINER_ID:/app/playwright-report ./playwright-report || echo "No report found in container"
 
-      - name: List report directory
-        run: ls -la ./playwright-report
+      - name: List report files
+        run: ls -la ./playwright-report || echo "No report directory"
 
-      # 📤 อัปโหลดรายงานผลการทดสอบ (ต้องแน่ใจว่า mount จาก container ออกมาแล้ว)
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
@@ -49,3 +48,10 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+
+      - name: Deploy report to GitHub Pages
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./playwright-report
