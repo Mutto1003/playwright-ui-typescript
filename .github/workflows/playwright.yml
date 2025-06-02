@@ -28,10 +28,18 @@ jobs:
         run: |
           docker-compose up --build
 
-      - name: Listing generated report
+      - name: Wait for Playwright container to finish (poll container status)
         run: |
-          ls -la ./playwright-report || echo "No report directory"
-          ls -la ./playwright-report || echo "No report file"
+          while [ "$(docker inspect -f '{{.State.Running}}' $(docker-compose ps -q playwright))" == "true" ]; do
+            echo "Waiting for test container to finish..."
+            sleep 5
+          done
+
+      - name: Copy report from container to host
+        run: docker cp $(docker-compose ps -q playwright):/app/playwright-report ./playwright-report
+
+      - name: List report directory
+        run: ls -la ./playwright-report
 
       # 📤 อัปโหลดรายงานผลการทดสอบ (ต้องแน่ใจว่า mount จาก container ออกมาแล้ว)
       - name: Upload Playwright Report
