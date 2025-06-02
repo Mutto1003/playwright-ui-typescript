@@ -1,5 +1,8 @@
 import cardTimeAtWork from "./cardTimeAtWork";
 
-export default {
+const Locators = {
   ...cardTimeAtWork,
-};
+} as const;
+
+export default Locators;
+export type LocatorKey = keyof typeof Locators;

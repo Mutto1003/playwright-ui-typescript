@@ -1,35 +1,30 @@
 import { Page, Locator } from '@playwright/test';
-import locators from '../locs/login/index';
-
-type LocatorMap = { [key: string]: string };
+import locators, { LocatorKey } from '../locs/login/index';
 
 export class LoginPage {
-  // สร้าง map เก็บ Locator objects แบบ dynamic
-  private locators: { [key: string]: Locator } = {};
+  readonly locators: Record<LocatorKey, Locator>;
+  readonly page: Page;
 
-  constructor(private page: Page) {
-    // วนลูปทุก key ใน locators แล้วสร้าง Locator instance ให้ใน this.locators
-    for (const key in locators) {
-      this.locators[key] = page.locator(locators[key]);
-    }
+  constructor(page: Page) {
+    this.page = page;
   }
 
   // ตัวอย่างฟังก์ชันเรียกใช้ locator แบบ dynamic
   async fillName(name: string) {
-    await this.locators.nameInput.waitFor();
-    await this.locators.nameInput.click();
-    await this.locators.nameInput.fill(name);
+    await this.page.waitForSelector(locators.nameInput);
+    await this.page.click(locators.nameInput);
+    await this.page.fill(locators.nameInput, name);
   }
 
   async fillPassword(password: string) {
-    await this.locators.passwordInput.waitFor();
-    await this.locators.passwordInput.click();
-    await this.locators.passwordInput.fill(password);
+    await this.page.waitForSelector(locators.passwordInput);
+    await this.page.click(locators.passwordInput);
+    await this.page.fill(locators.passwordInput, password);
   }
 
   async clickLogin() {
-    await this.locators.loginButton.waitFor();
-    await this.locators.loginButton.click();
+    await this.page.waitForSelector(locators.loginButton);
+    await this.page.click(locators.loginButton);
   }
 
   async login(name: string, password: string) {
