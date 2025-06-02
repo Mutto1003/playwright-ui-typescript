@@ -25,4 +25,4 @@ RUN npx playwright install --with-deps
 
 # ✅ กำหนดคำสั่งเริ่มต้นเมื่อ container ถูกรัน
 # ในกรณีนี้จะรันทดสอบทั้งหมดของ Playwright
-CMD ["npx", "playwright", "test"]
+CMD ["npx", "playwright", "test", "--reporter=html", "--output=playwright-report"]
