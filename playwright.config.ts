@@ -1,9 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
+import i18n, { Lang } from './i18n';
 
 dotenv.config({
   path: `./env/.env.${process.env.ENV || 'dev'}`,
 });
+
+const lang = (process.env.LANG === 'th') ? 'th' : 'en';
 
 /**
  * Read environment variables from file.
@@ -42,6 +45,7 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      metadata: { lang },
     },
 
       // {

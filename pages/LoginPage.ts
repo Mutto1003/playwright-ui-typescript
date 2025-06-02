@@ -1,16 +1,23 @@
 import { Page, Locator } from '@playwright/test';
 import locators, { LocatorKey } from '../locs/login/index';
+import i18n, { Lang } from '../i18n';
+
+const lang = (process.env.LANG === 'th') ? 'th' : 'en';
 
 export class LoginPage {
   readonly locators: Record<LocatorKey, Locator>;
+  readonly t = i18n[lang];
   readonly page: Page;
 
   constructor(page: Page) {
+    this.t = i18n[lang];
     this.page = page;
   }
 
-  // ตัวอย่างฟังก์ชันเรียกใช้ locator แบบ dynamic
+  // อย่าง ก์ ใช้ locator แบบ dynamic
   async fillName(name: string) {
+    console.log('lang', lang);
+    console.log('lang', this.t.dashboard.timeAtWork);
     await this.page.waitForSelector(locators.nameInput);
     await this.page.click(locators.nameInput);
     await this.page.fill(locators.nameInput, name);
