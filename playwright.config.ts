@@ -1,6 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
-import i18n, { Lang } from './i18n';
 
 dotenv.config({
   path: `./env/.env.${process.env.ENV || 'dev'}`,
@@ -80,6 +79,8 @@ export default defineConfig({
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
   ],
+
+  globalTeardown: './utils/notifications/globalTeardownNotifier.ts',
 
   /* Run your local dev server before starting the tests */
   // webServer: {
