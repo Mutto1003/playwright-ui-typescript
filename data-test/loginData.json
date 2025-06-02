@@ -1,0 +1,10 @@
+{
+  "validAdmin": {
+    "username": "Admin",
+    "password": "admin123"
+  },
+  "invalidUser": {
+    "username": "wronguser",
+    "password": "wrongpass"
+  }
+}
