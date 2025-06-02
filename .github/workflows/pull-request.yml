@@ -1,10 +1,10 @@
-name: Pull Request Checks  # ชื่อ workflow นี้
+name: Pull Request Checks
 
 on:
   pull_request:
     types: [opened, ready_for_review]  # รันเมื่อ PR ถูกเปิดใหม่ หรือเปลี่ยนสถานะเป็น ready_for_review
     branches:
-      - main  # รันเฉพาะ PR ที่ส่งไปยัง branch main
+      - dev  # รันเฉพาะ PR ที่ส่งไปยัง branch main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}  # จัดกลุ่มงานตามชื่อ workflow + เลข PR หรือ ref
