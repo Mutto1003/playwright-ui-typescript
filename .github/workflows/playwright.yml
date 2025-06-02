@@ -1,3 +1,4 @@
+# 🎯 ชื่อ workflow
 name: Playwright Tests with Docker Compose
 
 on:
@@ -22,17 +23,17 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
 
-      # 🐳 รัน docker-compose สำหรับรัน MySQL และ Playwright test (ไม่ใช้ -d เพื่อรอให้ test จบ)
+      # 🐳 รัน docker-compose สำหรับรัน MySQL และ Playwright test
       - name: Run Playwright test via Docker Compose
         run: |
-          docker-compose up --build
+          docker-compose up -d --build
 
-      # แสดงไฟล์ในโฟลเดอร์รายงานที่แมปไว้บน host
       - name: Listing generated report
         run: |
           ls -la playwright-report || echo "No report directory"
+          ls -la playwright-report/report.html || echo "No report file"
 
-      # 📤 อัปโหลดรายงานผลการทดสอบ (upload จากโฟลเดอร์ playwright-report บน host)
+      # 📤 อัปโหลดรายงานผลการทดสอบ (ต้องแน่ใจว่า mount จาก container ออกมาแล้ว)
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
@@ -40,11 +41,3 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-
-      # ✅ Deploy รายงานไป GitHub Pages (เฉพาะ branch main)
-      - name: Deploy report to GitHub Pages
-        if: ${{ github.ref == 'refs/heads/main' }}
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./playwright-report
