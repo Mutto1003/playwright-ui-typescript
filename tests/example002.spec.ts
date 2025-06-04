@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 // import { initializeDB } from '../db/initialize';
 // import { queryDB } from '../db/query';
+// import { getUserByEmail } from '../db/commonQueries';
 import { LoginPage } from '../pages/LoginPage';
 import * as loginData from '../data-test/loginData.json';
 const testData = loginData;
@@ -18,6 +19,6 @@ test('has title', async ({ page }) => {
   // await loginPage.login('Admin', 'admin123');
   await page.waitForTimeout(5000);
 
-  // const result: any = await queryDB('SELECT * FROM users WHERE username = ?', ['Admin']);
+  // const result = await getUserByEmail('Admin');
   // console.log('📦 User info from DB:', result);
 });

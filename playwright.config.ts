@@ -80,8 +80,6 @@ export default defineConfig({
     // },
   ],
 
-  globalTeardown: './utils/notifications/globalTeardownNotifier.ts',
-
   /* Run your local dev server before starting the tests */
   // webServer: {
   //   command: 'npm run start',

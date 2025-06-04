@@ -18,6 +18,7 @@ export class LoginPage {
   async fillName(name: string) {
     console.log('lang', lang);
     console.log('lang', this.t.dashboard.timeAtWork);
+    //  await this.page.waitForSelector( `//input[@placeholder='${this.t.dashboard.timeAtWork}']`);
     await this.page.waitForSelector(locators.nameInput);
     await this.page.click(locators.nameInput);
     await this.page.fill(locators.nameInput, name);

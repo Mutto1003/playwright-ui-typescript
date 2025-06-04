@@ -57,3 +57,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: playwright-report
+
+      - name: Send Teams notification
+        run: npx ts-node ./utils/notifications/teamsNotifier.ts

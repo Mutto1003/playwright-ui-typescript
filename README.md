@@ -7,6 +7,10 @@
 - ✔ Add a GitHub Actions workflow? (y/N) · true
 - ✔ Install Playwright browsers (can be done manually via 'npx playwright install')? (Y/n) · true
 
+## Install typescript
+- npm install typescript --save-dev
+- npx tsc --init
+
 ## Running the Example Test
 - npx playwright test
 
