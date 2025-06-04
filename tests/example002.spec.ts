@@ -19,6 +19,8 @@ test('has title', async ({ page }) => {
   // await loginPage.login('Admin', 'admin123');
   await page.waitForTimeout(5000);
 
+  console.log("Test no: 002")
+
   // const result = await getUserByEmail('Admin');
   // console.log('📦 User info from DB:', result);
 });
