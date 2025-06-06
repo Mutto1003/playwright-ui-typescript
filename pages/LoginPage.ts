@@ -5,7 +5,6 @@ import i18n, { Lang } from '../i18n';
 const lang = (process.env.LANG === 'th') ? 'th' : 'en';
 
 export class LoginPage {
-  readonly locators: Record<LocatorKey, Locator>;
   readonly t = i18n[lang];
   readonly page: Page;
 
