@@ -19,5 +19,5 @@ test('has title', async ({ page }) => {
   await page.waitForTimeout(5000);
 
   // const result: any = await queryDB('SELECT * FROM users WHERE username = ?', ['Admin']);
-  // console.log('📦 User info from DB:', result);
+  console.log('📦 User info from DB:');
 });
