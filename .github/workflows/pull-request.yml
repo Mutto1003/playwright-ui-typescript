@@ -37,7 +37,7 @@ jobs:
           else
             echo "❌ Invalid PR title: $PR_TITLE"
             echo "::error::Pull request title must match one of the following formats:"
-            echo "::error::  sprint-{X}-test-{name}"
-            echo "::error::  sprint-{X}-automation-{name}"
+            echo "::error::  sprint-{X}-{feature|fix|chore|test|refactor}-{name}"
+            echo "::error::  hotfix-{name}"
             exit 1
           fi
