@@ -30,12 +30,14 @@ jobs:
           SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"  # เก็บชื่อ branch ที่ส่ง PR มาใน SOURCE_BRANCH
 
           # ตรวจสอบว่า PR_TITLE ตรงกับ pattern ที่กำหนดหรือไม่
-          if [[ "$PR_TITLE" =~ ^sprint-[0-9]+/(feature|fix)/[a-z0-9_-]+$ ]]; then
-            echo "PR title matches sprint feature/fix pattern."  # ถ้าตรง pattern sprint-{X}/feature/{name} หรือ sprint-{X}/fix/{name} ให้ผ่าน
-          elif [[ "$PR_TITLE" =~ ^hotfix/[a-z0-9_-]+$ ]]; then
-            echo "PR title matches hotfix pattern."  # หรือถ้าตรง pattern hotfix/{name} ให้ผ่าน
+          if [[ "$PR_TITLE" =~ ^sprint-[0-9]+-(feature|fix|chore|test|refactor)-[a-z0-9_-]+$ ]]; then
+            echo "✅ PR title matches automated test pattern."
+          elif [[ "$PR_TITLE" =~ ^hotfix-[a-z0-9_-]+$ ]]; then
+            echo "✅ PR title matches hotfix pattern."
           else
-            echo "Invalid PR title: $PR_TITLE"  # ถ้าไม่ตรง pattern ใดๆ ให้แสดงข้อความผิดพลาด
-            echo "::error::Pull request title does not match the required pattern: sprint-{X}/feature/{XXXXX}, sprint-{X}/fix/{XXXXX}, hotfix"  # แจ้ง error ใน GitHub Actions UI
-            exit 1  # หยุดทำงาน job นี้ พร้อมส่งสถานะล้มเหลว (fail)
+            echo "❌ Invalid PR title: $PR_TITLE"
+            echo "::error::Pull request title must match one of the following formats:"
+            echo "::error::  sprint-{X}-test-{name}"
+            echo "::error::  sprint-{X}-automation-{name}"
+            exit 1
           fi
