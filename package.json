@@ -9,7 +9,7 @@
     "test:prod": "ENV=prod npx playwright test",
     "test:lang-th": "LANG=th npx playwright test",
     "test:lang-en": "LANG=en npx playwright test",
-    "test:prod-th": "ENV=prod LANG=th npx playwright test"
+    "test:prod-th": "ENV=prod LANG=th npx playwright test --headed"
   },
   "keywords": [],
   "author": "",

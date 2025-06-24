@@ -60,3 +60,4 @@
 - npm install mysql2
 
 ## tsconfig.json
+- test
